@@ -2,31 +2,20 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Nightcall Phantom</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Orbitron:wght@600;800&family=Exo+2:wght@300;400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&family=Orbitron:wght@600;800&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --bg: #060014;
-      --neon-pink: #ff00d4;
-      --neon-cyan: #00f0ff;
-      --neon-purple: #a100ff;
-      --text: #f5eaff;
-      --card: rgba(18, 0, 40, 0.78);
-      --glow-pink: rgba(255, 0, 212, 0.65);
-      --glow-cyan: rgba(0, 240, 255, 0.45);
-    }
-
     body {
-      background: var(--bg);
-      color: var(--text);
+      margin: 0;
+      padding: 0;
+      background: #000000;
+      color: #f0f0ff;
       font-family: 'Exo 2', sans-serif;
       min-height: 100vh;
-      margin: 0;
-      padding: 0 16px 80px;
-      position: relative;
       overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
     }
 
     canvas#particles {
@@ -37,134 +26,109 @@
     }
 
     .container {
-      max-width: 720px;
-      margin: 0 auto;
+      max-width: 100%;
+      padding: 10px 12px;
       position: relative;
       z-index: 2;
     }
 
     .header {
       text-align: center;
-      padding: 60px 0 40px;
+      padding: 20px 0 15px;
     }
 
     .shop-name {
       font-family: 'Orbitron', sans-serif;
-      font-size: 4.2rem;
+      font-size: 2.2rem;
       font-weight: 900;
-      letter-spacing: 10px;
-      background: linear-gradient(90deg, var(--neon-pink), var(--neon-cyan), var(--neon-purple));
+      letter-spacing: 4px;
+      background: linear-gradient(90deg, #ff00d4, #00ffff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 40px var(--glow-pink), 0 0 80px var(--glow-cyan);
-      animation: flow 14s infinite linear;
-    }
-
-    @keyframes flow {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 300% 50%; }
+      text-shadow: 0 0 20px #ff00d488;
+      margin: 0;
     }
 
     .welcome {
-      background: var(--card);
-      border: 1px solid rgba(255,0,212,0.22);
-      border-radius: 28px;
-      padding: 32px 28px;
-      margin: 0 0 50px;
+      background: rgba(20, 0, 50, 0.8);
+      border: 1px solid #00ffff33;
+      border-radius: 16px;
+      padding: 18px 16px;
+      margin: 0 0 25px;
       font-family: 'Caveat', cursive;
-      font-size: 1.55rem;
-      line-height: 1.75;
+      font-size: 1.3rem;
+      line-height: 1.5;
       color: #e8d8ff;
-      text-shadow: 0 0 12px rgba(255,0,212,0.4);
-      backdrop-filter: blur(16px);
-      box-shadow: 0 12px 60px rgba(161,0,255,0.22);
-      letter-spacing: 0.5px;
+      text-shadow: 0 0 8px #00ffff66;
+      backdrop-filter: blur(8px);
+      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
     }
 
-    .services-grid {
+    .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
+      grid-template-columns: 1fr;
+      gap: 16px;
     }
 
-    .service {
-      background: linear-gradient(145deg, rgba(18,0,40,0.92), rgba(30,0,55,0.85));
-      border: 1px solid rgba(0,240,255,0.28);
-      border-radius: 22px;
-      padding: 24px;
-      transition: all 0.6s cubic-bezier(0.34,1.56,0.64,1);
-      backdrop-filter: blur(12px);
-      box-shadow: 0 8px 40px rgba(0,0,0,0.65);
+    @media (min-width: 380px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
     }
 
-    .service:hover {
-      transform: translateY(-12px) scale(1.03);
-      border-color: var(--neon-pink);
-      box-shadow: 0 25px 80px rgba(255,0,212,0.4);
+    .item {
+      background: rgba(15, 0, 30, 0.9);
+      border: 1px solid #ff00d433;
+      border-radius: 14px;
+      padding: 16px;
+      transition: all 0.4s;
+      backdrop-filter: blur(6px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5);
     }
 
-    .service.selected {
-      animation: selectPulse 1.2s ease-out;
-      border-color: var(--neon-pink);
-      box-shadow: 0 0 60px rgba(255,0,212,0.7);
-      transform: scale(1.05);
-    }
-
-    @keyframes selectPulse {
-      0%   { box-shadow: 0 0 0 rgba(255,0,212,0); transform: scale(1); }
-      50%  { box-shadow: 0 0 80px rgba(255,0,212,0.9); transform: scale(1.08); }
-      100% { box-shadow: 0 0 40px rgba(255,0,212,0.5); transform: scale(1.03); }
-    }
-
-    .title, .price {
-      font-family: 'Caveat', cursive;
-      text-shadow: 0 0 12px rgba(255,0,212,0.5);
+    .item:hover {
+      transform: translateY(-6px);
+      border-color: #ff00d4;
+      box-shadow: 0 0 30px rgba(255,0,212,0.4);
     }
 
     .title {
-      font-size: 2.1rem;
-      font-weight: 700;
-      margin-bottom: 8px;
+      font-family: 'Caveat', cursive;
+      font-size: 1.6rem;
+      margin-bottom: 6px;
+      color: #ffffff;
     }
 
     .price {
-      font-size: 2.4rem;
-      font-weight: 700;
-      color: var(--neon-cyan);
-      margin-bottom: 16px;
-      text-shadow: 0 0 18px var(--glow-cyan);
+      font-family: 'Caveat', cursive;
+      font-size: 1.9rem;
+      color: #00ffff;
+      margin-bottom: 10px;
     }
 
     button {
       width: 100%;
-      padding: 18px;
+      padding: 12px;
       background: transparent;
-      color: #ffffff;
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: 3px;
-      text-transform: uppercase;
-      border: 2px solid #ffffff88;
-      border-radius: 12px;
+      color: white;
+      font-size: 1rem;
+      border: 2px solid white;
+      border-radius: 10px;
       cursor: pointer;
-      transition: all 0.5s ease;
-      box-shadow: 0 0 20px rgba(255,255,255,0.12);
+      transition: 0.4s;
     }
 
     button:hover {
-      background: rgba(255,255,255,0.08);
-      border-color: var(--neon-pink);
-      box-shadow: 0 0 50px rgba(255,0,212,0.65);
-      transform: translateY(-4px);
+      background: rgba(255,255,255,0.1);
+      border-color: #ff00d4;
     }
 
     #status {
       text-align: center;
-      margin: 50px 0 30px;
-      font-size: 1.25rem;
+      margin-top: 30px;
       color: #ffcc00;
-      text-shadow: 0 0 18px #ffcc00aa;
+      font-size: 1.1rem;
     }
   </style>
 </head>
@@ -185,80 +149,80 @@
 По всем вопросам: @NightcallWind_crd
     </div>
 
-    <div class="services-grid">
-      <div class="service">
+    <div class="grid">
+      <div class="item">
         <div class="title">Регистрация VCC</div>
         <div class="price">100$</div>
         <button onclick="pay(100, 'Регистрация VCC')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Регистрация CU/FCU</div>
         <div class="price">250$</div>
         <button onclick="pay(250, 'Регистрация CU/FCU')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Работа с чеками</div>
         <div class="price">200$</div>
         <button onclick="pay(200, 'Работа с чеками')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Отработка БА</div>
         <div class="price">600$</div>
         <button onclick="pay(600, 'Отработка БА')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Снятие ENROLL + Регистрация</div>
         <div class="price">200$</div>
         <button onclick="pay(200, 'Снятие ENROLL + Регистрация')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Вещевуха (золото/техника)</div>
         <div class="price">350$</div>
         <button onclick="pay(350, 'Вещевуха (золото/техника)')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Отработка биз plaid</div>
         <div class="price">500$</div>
         <button onclick="pay(500, 'Отработка биз plaid')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Отработка Trustly</div>
         <div class="price">300$</div>
         <button onclick="pay(300, 'Отработка Trustly')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Обход геокомплай</div>
         <div class="price">150$</div>
         <button onclick="pay(150, 'Обход геокомплай')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Настройка системы для работы</div>
         <div class="price">50$</div>
         <button onclick="pay(50, 'Настройка системы для работы')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Бк/Казик</div>
         <div class="price">150$</div>
         <button onclick="pay(150, 'Бк/Казик')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Работа с Coinbase + вериф</div>
         <div class="price">300$</div>
         <button onclick="pay(300, 'Работа с Coinbase + вериф')">КУПИТЬ</button>
       </div>
 
-      <div class="service">
+      <div class="item">
         <div class="title">Прохождение KYC</div>
         <div class="price">100$</div>
         <button onclick="pay(100, 'Прохождение KYC')">КУПИТЬ</button>
@@ -272,8 +236,9 @@
     const tg = window.Telegram.WebApp;
     tg.ready();
     tg.expand();
+    tg.MainButton.setVisible(false); // убираем главную кнопку TG, если мешает
 
-    // Частицы — плавные, атмосферные
+    // Частицы по всему окну
     const canvas = document.getElementById('particles');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth;
@@ -294,13 +259,13 @@
       reset() {
         this.x = Math.random() * canvas.width;
         this.y = Math.random() * canvas.height;
-        this.size = Math.random() * 20 + 10;
-        this.vx = (Math.random() - 0.5) * 0.2;
-        this.vy = (Math.random() - 0.5) * 0.2;
+        this.size = Math.random() * 18 + 8;
+        this.vx = (Math.random() - 0.5) * 0.15;
+        this.vy = (Math.random() - 0.5) * 0.15;
         this.icon = icons[Math.floor(Math.random() * icons.length)];
         this.alpha = 0.1 + Math.random() * 0.3;
         this.rotation = Math.random() * Math.PI * 2;
-        this.rotSpeed = (Math.random() - 0.5) * 0.002;
+        this.rotSpeed = (Math.random() - 0.5) * 0.0015;
       }
       update() {
         this.x += this.vx;
@@ -311,7 +276,7 @@
           this.reset();
         }
 
-        this.alpha = 0.25 + Math.sin(Date.now() * 0.0006 + this.x * 0.008) * 0.15;
+        this.alpha = 0.25 + Math.sin(Date.now() * 0.0008 + this.x * 0.005) * 0.15;
       }
       draw() {
         ctx.save();
@@ -344,35 +309,16 @@
 
     animate();
 
-    // Подсветка при выборе
-    function playBuySound() {
-      const snd = new Audio('https://assets.codepen.io/605876/neon-click.mp3');
-      snd.volume = 0.25;
-      snd.play().catch(() => {});
-    }
-
-    document.addEventListener('click', e => {
-      if (e.target.tagName === 'BUTTON') {
-        playBuySound();
-        const card = e.target.closest('.service');
-        if (card) {
-          card.classList.add('selected');
-          setTimeout(() => card.classList.remove('selected'), 1200);
-        }
-      }
-    });
-
-    // Оплата
     const API_KEY = "WTB4CEZ-J00452X-NY9SFAF-EG6VAMY";
 
     async function pay(amount, desc) {
-      document.getElementById('status').innerText = "Создаём инвойс...";
+      document.getElementById('status').innerText = "Создаём оплату...";
 
       const payload = {
         price_amount: amount,
         price_currency: "usd",
         pay_currency: "usdttrc20",
-        order_id: `np_${Date.now()}`,
+        order_id: `shop_${Date.now()}`,
         order_description: desc
       };
 
@@ -389,13 +335,13 @@
         const json = await res.json();
 
         if (json.invoice_url) {
-          document.getElementById('status').innerText = "Готово! Переходим к оплате...";
+          document.getElementById('status').innerText = "Оплата готова! Переходим...";
           tg.openLink(json.invoice_url);
         } else {
           document.getElementById('status').innerText = "Ошибка: " + (json.message || "попробуй позже");
         }
       } catch (e) {
-        document.getElementById('status').innerText = "Ошибка: " + e.message;
+        document.getElementById('status').innerText = "Ошибка сети: " + e.message;
       }
     }
   </script>
